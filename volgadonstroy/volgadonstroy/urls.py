@@ -14,14 +14,30 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.views import LogoutView
 from django.urls import path, include
+
+from feedback.views import UserLoginView
+from volgadonstroy.views import main_page
+
+from rest_framework.routers import SimpleRouter
+
+# router = SimpleRouter()
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('login-admin/', UserLoginView.as_view(), name='login-admin'),
+    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
+    path('', main_page, name='main_page'),
+
     path('articles/', include('articles.urls')),
     path('goods/', include('goods.urls')),
+    path('feedbacks/', include('feedback.urls')),
 ]
 
-
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += router.urls

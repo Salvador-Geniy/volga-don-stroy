@@ -1,19 +1,31 @@
-from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from goods.models import Good, Category
+from goods.models import Good, Category, Images
 
 
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name']
+        fields = '__all__'
+
+
+class AlbumSerializer(ModelSerializer):
+    class Meta:
+        model = Images
+        fields = '__all__'
 
 
 class GoodSerializer(ModelSerializer):
-    category_name = serializers.CharField(source='category.name', read_only=True)
+    category = CategorySerializer()
+    images = AlbumSerializer()
 
     class Meta:
         model = Good
-        fields = ('category_name', 'name', 'description', 'image')
+        fields = ('id', 'name', 'description', 'published', 'category', 'images')
+
+
+class GoodCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Good
+        fields = '__all__'
 
