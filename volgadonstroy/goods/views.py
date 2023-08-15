@@ -4,11 +4,11 @@ from django.conf import settings
 from django.db import transaction
 from django.http import Http404
 from rest_framework import status
-from rest_framework.mixins import ListModelMixin
+from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, GenericViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.parsers import FormParser, MultiPartParser
 
 from .models import Good, Category, Images
@@ -16,22 +16,27 @@ from .serializers import GoodSerializer, GoodCreateSerializer, \
     CategorySerializer, AlbumSerializer
 
 
-class CategoryViewSet(ModelViewSet):
-    queryset = Category.objects.all().order_by('name')
+class CategoriesListCreateAdminView(generics.ListCreateAPIView):
+    queryset = Category.objects.all().prefetch_related('products').order_by('name')
     serializer_class = CategorySerializer
 
 
-class GoodReadOnlyModeViewSet(ReadOnlyModelViewSet):
+class CategoriesRetrieveUpdateDestroyAdminView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class GoodReadOnlyModelViewSet(ReadOnlyModelViewSet):
     """View for client side"""
     permission_classes = [AllowAny]
     queryset = Good.objects.filter(published=True).select_related('images')
     serializer_class = GoodSerializer
 
 
-class GoodAdminView(ListModelMixin, GenericViewSet):
+class GoodListAdminView(generics.ListAPIView):
     """List view for admin side"""
-    queryset = Good.objects.all().select_related(
-        'category').select_related('images').order_by('name')
+    # parser_classes = [FormParser, MultiPartParser]
+    queryset = Good.objects.all().select_related('category').select_related('images').order_by('name')
     serializer_class = GoodSerializer
 
 

@@ -23,10 +23,6 @@ from django.urls import path, include
 from feedback.views import UserLoginView
 from volgadonstroy.views import main_page
 
-from rest_framework.routers import SimpleRouter
-
-# router = SimpleRouter()
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,4 +36,3 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-# urlpatterns += router.urls
