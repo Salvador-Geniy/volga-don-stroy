@@ -30,6 +30,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
     path('', main_page, name='main_page'),
 
+    path('auth/', include('auth.urls')),
+
     path('articles/', include('articles.urls')),
     path('goods/', include('goods.urls')),
     path('feedbacks/', include('feedback.urls')),
