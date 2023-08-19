@@ -68,9 +68,3 @@ class ArticleDetailView(APIView):
         if os.path.exists(os.path.join(settings.MEDIA_ROOT, str(old_img))):
             os.remove(os.path.join(settings.MEDIA_ROOT, str(old_img)))
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-
-
-

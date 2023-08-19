@@ -1,34 +1,26 @@
-from django.contrib.auth.views import LoginView
-from django.views.generic.edit import CreateView
-from rest_framework.mixins import ListModelMixin
-from rest_framework.reverse import reverse_lazy
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework import status
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 from .models import Feedback
-from .forms import FeedbackForm
 from .serializers import FeedbackSerializer
 
-
-class FeedbackView(ModelViewSet):
-    queryset = Feedback.objects.all()
+class FeedbackCreateView(CreateAPIView):
+    permission_classes = [AllowAny]
     serializer_class = FeedbackSerializer
 
 
-class AddFeedback(CreateView):
-    form_class = FeedbackForm
-    template_name = 'feedback/add_feedback.html'
-    success_url = '/'
-
-
-class FeedbackViewSet(ListModelMixin, GenericViewSet):
+class FeedbackViewSet(ModelViewSet):
+    http_method_names = ['get', 'patch', 'delete']
     queryset = Feedback.objects.all().order_by('answered', 'created_at')
     serializer_class = FeedbackSerializer
 
-
-class UserLoginView(LoginView):
-    template_name = 'login-admin.html'
-    fields = ('username', 'password')
-    redirect_authenticated_user = True
-
-    def get_success_url(self):
-        return reverse_lazy('main_page')
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not instance.answered:
+            return Response('Message must be marked as "was answered" for delete.',
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
