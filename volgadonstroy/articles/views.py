@@ -26,7 +26,7 @@ class ArticleReadOnlyModelViewSet(ReadOnlyModelViewSet):
 class ArticleListView(generics.ListCreateAPIView):
     """Admin side list and new article create view"""
     parser_classes = [MultiPartParser, FormParser]
-    queryset = Article.objects.all()
+    queryset = Article.objects.all().order_by('created_at')
     serializer_class = ArticleSerializer
 
 

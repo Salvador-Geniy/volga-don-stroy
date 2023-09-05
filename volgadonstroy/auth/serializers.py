@@ -76,7 +76,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     def validate_username(self, value):
         user = self.context['request'].user
         if User.objects.exclude(pk=user.pk).filter(username=value).exists():
-            raise serializers.ValidationError({"username": "This usename is already in use."})
+            raise serializers.ValidationError({"username": "This username is already in use."})
         return value
 
     def update(self, instance, validated_data):

@@ -4,7 +4,7 @@ from rest_framework.routers import SimpleRouter
 from .views import ArticleReadOnlyModelViewSet, ArticleListView, ArticleDetailView
 
 router = SimpleRouter()
-router.register(r'articles', ArticleReadOnlyModelViewSet)
+router.register(r'', ArticleReadOnlyModelViewSet)
 
 urlpatterns = [
     path('admin/list/', ArticleListView.as_view(), name='articles-list'),

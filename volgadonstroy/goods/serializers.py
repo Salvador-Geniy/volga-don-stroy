@@ -21,7 +21,7 @@ class GoodSerializer(ModelSerializer):
 
     class Meta:
         model = Good
-        fields = ('id', 'name', 'description', 'published', 'category', 'images')
+        fields = ('id', 'name', 'description', 'in_stock', 'published', 'category', 'images')
 
 
 class GoodCreateSerializer(ModelSerializer):

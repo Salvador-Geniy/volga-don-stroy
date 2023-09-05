@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VolgaDon</title>
+</head>
+<body>
+    <h1>Main page</h1>
+
+    <p>Hello, {{ user }}!</p>
+
+
+
+    <div>
+        {% block feedback %}
+        {% endblock feedback %}
+    </div>
+
+
+</body>
+</html>

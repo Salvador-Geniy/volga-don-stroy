@@ -47,8 +47,7 @@ class GoodCreateView(APIView):
 
     @transaction.atomic
     def post(self, request, format=None):
-        good_obj = None
-        img1 = request.data.get('img1')
+        img1 = request.data.get('img1') # TODO
         img2 = request.data.get('img2')
         img3 = request.data.get('img3')
         img4 = request.data.get('img4')
@@ -60,7 +59,7 @@ class GoodCreateView(APIView):
             good_obj = Good.objects.create(**serialized_data.validated_data)
             album_serialized_data = AlbumSerializer(data={
                 'product': str(good_obj.id),
-                'img1': img1,
+                'img1': img1, # TODO
                 'img2': img2,
                 'img3': img3,
                 'img4': img4,
@@ -68,9 +67,9 @@ class GoodCreateView(APIView):
             })
             if album_serialized_data.is_valid():
                 Images.objects.create(**album_serialized_data.validated_data)
-                response_data = self.serializer(Good.objects.last()).data
+                response_data = self.serializer(good_obj).data
                 return Response(data=response_data, status=status.HTTP_201_CREATED)
-            return Response(AlbumSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(self.serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(self.serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -90,7 +89,7 @@ class GoodDetailView(APIView):
         return Images.objects.get_or_create(product=good)
 
     def get_image_list(self, obj):
-        return [obj.img1, obj.img2, obj.img3, obj.img4, obj.img5]
+        return [obj.img1, obj.img2, obj.img3, obj.img4, obj.img5] # TODO
 
     def delete_unused_images(self, images):
         for img in images:
