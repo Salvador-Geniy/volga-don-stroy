@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from goods.models import Good, Category, Images
@@ -28,4 +29,15 @@ class GoodCreateSerializer(ModelSerializer):
     class Meta:
         model = Good
         fields = '__all__'
+
+
+class TestSerializer(ModelSerializer):
+    name = serializers.CharField(max_length=255)
+    description = serializers.DjangoModelField(name='description')
+    in_stock = serializers.BooleanField(default=False)
+    published = serializers.BooleanField(default=False)
+    class Meta:
+        model = Good
+        fields = '__all__'
+
 

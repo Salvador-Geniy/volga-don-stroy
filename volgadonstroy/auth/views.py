@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User
-from rest_framework import generics
+
+from rest_framework import generics, response
 from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .serializers import (MyTokenObtainPairSerializer, UserRegisterSerializer,
@@ -18,6 +21,10 @@ class UserListView(generics.ListAPIView):
     queryset = User.objects.exclude(is_superuser=True)
     serializer_class = UserSerializer
 
+    def get(self, request, *args, **kwargs):
+        print('User:', request.user.id)
+        return self.list(request, *args, **kwargs)
+
 
 class UserRetrieveDeleteView(generics.RetrieveDestroyAPIView):
     permission_classes = [IsAdminUser]
@@ -32,10 +39,29 @@ class UserRegisterView(generics.CreateAPIView):
 
 
 class UserChangePasswordView(generics.UpdateAPIView):
-    queryset = User.objects.all()
+    model = User
     serializer_class = UserChangePasswordSerializer
 
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+
+# class UserUpdateProfileView(generics.UpdateAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserUpdateSerializer
 
 class UserUpdateProfileView(generics.UpdateAPIView):
-    queryset = User.objects.all()
+    model = User
     serializer_class = UserUpdateSerializer
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+
+class CurrentUser(APIView):
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
