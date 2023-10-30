@@ -17,6 +17,7 @@ class Good(models.Model):
                                  on_delete=models.SET_NULL, related_name='products')
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField()
+    in_stock = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
 
     def __str__(self):

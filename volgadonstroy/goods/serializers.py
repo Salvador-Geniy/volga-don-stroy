@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from goods.models import Good, Category, Images
@@ -6,7 +7,7 @@ from goods.models import Good, Category, Images
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ('id', 'name', 'products')
 
 
 class AlbumSerializer(ModelSerializer):
@@ -21,11 +22,22 @@ class GoodSerializer(ModelSerializer):
 
     class Meta:
         model = Good
-        fields = ('id', 'name', 'description', 'published', 'category', 'images')
+        fields = ('id', 'name', 'description', 'in_stock', 'published', 'category', 'images')
 
 
 class GoodCreateSerializer(ModelSerializer):
     class Meta:
         model = Good
         fields = '__all__'
+
+
+class TestSerializer(ModelSerializer):
+    name = serializers.CharField(max_length=255)
+    description = serializers.DjangoModelField(name='description')
+    in_stock = serializers.BooleanField(default=False)
+    published = serializers.BooleanField(default=False)
+    class Meta:
+        model = Good
+        fields = '__all__'
+
 

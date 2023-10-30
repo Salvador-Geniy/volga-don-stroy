@@ -7,12 +7,14 @@ from rest_framework.viewsets import ModelViewSet
 from .models import Feedback
 from .serializers import FeedbackSerializer
 
+
 class FeedbackCreateView(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = FeedbackSerializer
 
 
 class FeedbackViewSet(ModelViewSet):
+    """Soft delete!!!"""
     http_method_names = ['get', 'patch', 'delete']
     queryset = Feedback.objects.all().order_by('answered', 'created_at')
     serializer_class = FeedbackSerializer

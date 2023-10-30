@@ -17,18 +17,11 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth.views import LogoutView
 from django.urls import path, include
-
-from feedback.views import UserLoginView
-from volgadonstroy.views import main_page
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login-admin/', UserLoginView.as_view(), name='login-admin'),
-    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
-    path('', main_page, name='main_page'),
 
     path('auth/', include('auth.urls')),
 
