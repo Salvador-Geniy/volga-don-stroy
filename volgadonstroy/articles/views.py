@@ -1,5 +1,6 @@
 import os
 
+from django.core.cache import cache
 from django.http import Http404
 from rest_framework import status
 from rest_framework import generics
@@ -21,6 +22,24 @@ class ArticleReadOnlyModelViewSet(ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     queryset = Article.objects.filter(published=True).order_by('-created_at')
     serializer_class = ArticleSerializer
+
+    def list(self, request, *args, **kwargs):
+        articles_cache_name = 'articles'
+        articles_cache = cache.get(articles_cache_name)
+
+        if articles_cache:
+            queryset = articles_cache
+        else:
+            queryset = self.filter_queryset(self.get_queryset())
+            cache.set(articles_cache_name, queryset, 30)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class ArticleListView(generics.ListCreateAPIView):

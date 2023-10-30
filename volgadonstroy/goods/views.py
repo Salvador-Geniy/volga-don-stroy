@@ -36,47 +36,12 @@ class GoodReadOnlyModelViewSet(ReadOnlyModelViewSet):
 
 class GoodListAdminView(generics.ListAPIView):
     """List view for admin side"""
-    # parser_classes = [FormParser, MultiPartParser]
+    parser_classes = [FormParser, MultiPartParser]
     queryset = Good.objects.all().select_related('category').select_related('images').order_by('name')
     serializer_class = GoodSerializer
 
 
 class GoodCreateView(APIView):
-    """View for create new Good object and related Images object"""
-    parser_classes = [FormParser, MultiPartParser]
-    serializer = GoodCreateSerializer
-
-    @transaction.atomic
-    def post(self, request, format=None):
-        good_obj = None
-        img1 = request.data.get('img1')
-        img2 = request.data.get('img2')
-        img3 = request.data.get('img3')
-        img4 = request.data.get('img4')
-        img5 = request.data.get('img5')
-
-        serialized_data = self.serializer(data=request.data)
-
-        if serialized_data.is_valid():
-            good_obj = Good.objects.create(**serialized_data.validated_data)
-            album_serialized_data = AlbumSerializer(data={
-                'product': str(good_obj.id),
-                'img1': img1,
-                'img2': img2,
-                'img3': img3,
-                'img4': img4,
-                'img5': img5,
-            })
-            if album_serialized_data.is_valid():
-                Images.objects.create(**album_serialized_data.validated_data)
-                response_data = self.serializer(Good.objects.last()).data
-                return Response(data=response_data, status=status.HTTP_201_CREATED)
-            return Response(AlbumSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response(self.serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class TestGoodCreateView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
     def get_album_data(self, data):

@@ -7,7 +7,7 @@ from goods.models import Good, Category, Images
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ('id', 'name', 'products')
 
 
 class AlbumSerializer(ModelSerializer):
