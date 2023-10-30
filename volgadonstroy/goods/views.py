@@ -1,13 +1,14 @@
 import os
 import re
 
+from common_services.cache_service import get_data_from_cache_or_queryset
 from volgadonstroy import settings
 from django.db import transaction
 from django.http import Http404
 from rest_framework import status
 from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -32,6 +33,15 @@ class GoodReadOnlyModelViewSet(ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     queryset = Good.objects.filter(published=True).select_related('images')
     serializer_class = GoodSerializer
+
+    def list(self, request, *args, **kwargs):
+        goods_cache_name = 'goods'
+
+        serializer_data = get_data_from_cache_or_queryset(
+            object=self,
+            object_cache_name=goods_cache_name
+        )
+        return Response(serializer_data)
 
 
 class GoodListAdminView(generics.ListAPIView):

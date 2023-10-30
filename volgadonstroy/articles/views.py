@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 
 from rest_framework.permissions import AllowAny
 
+from common_services.cache_service import get_data_from_cache_or_queryset
 from volgadonstroy import settings
 
 from .models import Article
@@ -24,22 +25,13 @@ class ArticleReadOnlyModelViewSet(ReadOnlyModelViewSet):
     serializer_class = ArticleSerializer
 
     def list(self, request, *args, **kwargs):
-        articles_cache_name = 'articles'
-        articles_cache = cache.get(articles_cache_name)
+        goods_cache_name = 'articles'
 
-        if articles_cache:
-            queryset = articles_cache
-        else:
-            queryset = self.filter_queryset(self.get_queryset())
-            cache.set(articles_cache_name, queryset, 30)
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        serializer_data = get_data_from_cache_or_queryset(
+            object=self,
+            object_cache_name=goods_cache_name
+        )
+        return Response(serializer_data)
 
 
 class ArticleListView(generics.ListCreateAPIView):
