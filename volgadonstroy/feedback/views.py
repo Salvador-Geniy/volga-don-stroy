@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from common_services.mail_service import send_feedback_mail
 from .models import Feedback
 from .serializers import FeedbackSerializer
 
@@ -11,6 +12,15 @@ from .serializers import FeedbackSerializer
 class FeedbackCreateView(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = FeedbackSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+        obj = serializer.data
+        send_result = send_feedback_mail(obj)
+        if send_result:
+            print("Success", send_result)
+        else:
+            print("Bad sending")
 
 
 class FeedbackViewSet(ModelViewSet):

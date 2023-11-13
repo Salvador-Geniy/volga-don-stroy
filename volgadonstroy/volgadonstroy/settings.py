@@ -164,3 +164,12 @@ CACHES = {
         }
     }
 }
+
+EMAIL_HOST = 'smtp.timeweb.ru'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'feedback@djangosite.tw1.ru'
+DEFAULT_FROM_EMAIL = 'feedback@djangosite.tw1.ru'
+SERVER_EMAIL = 'feedback@djangosite.tw1.ru'
+EMAIL_HOST_PASSWORD = 'RqjA67B7'
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
