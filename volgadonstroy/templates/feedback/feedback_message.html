@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback message</title>
+    <style>
+        .message {
+            background-color: aqua;
+        },
+    </style>
+</head>
+<body>
+    <h2>Feedback service found a new message</h2>
+    <div class="message">
+        Name: {{ feedback.first_name }} <br>
+        Surname: {{ feedback.last_name }} <br>
+        Phone number: {{ feedback.phone }}
+    </div>
+</body>
+</html>
