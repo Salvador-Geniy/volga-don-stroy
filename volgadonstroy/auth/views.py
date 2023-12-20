@@ -47,10 +47,6 @@ class UserChangePasswordView(generics.UpdateAPIView):
         return obj
 
 
-# class UserUpdateProfileView(generics.UpdateAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserUpdateSerializer
-
 class UserUpdateProfileView(generics.UpdateAPIView):
     model = User
     serializer_class = UserUpdateSerializer
