@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from rest_framework import generics, response
+from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -22,7 +22,6 @@ class UserListView(generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get(self, request, *args, **kwargs):
-        print('User:', request.user.id)
         return self.list(request, *args, **kwargs)
 
 
